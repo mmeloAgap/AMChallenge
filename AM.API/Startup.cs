@@ -1,3 +1,5 @@
+using AM.API.Handler;
+using AM.Core.Model;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,6 +27,9 @@ namespace AM.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.Configure<UserData>(Configuration.GetSection("UserData"));
+            services.AddScoped<IUserHandler, UserHandler>();
+
             services.AddControllers();
         }
 
