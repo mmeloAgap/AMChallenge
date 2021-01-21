@@ -1,10 +1,9 @@
-﻿using AM.Core.Model;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AM.Core.Manager
+namespace AM.API.Manager
 {
     public interface IUserManager
     {

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace AM.Core.Model
+namespace AM.API.Models
 {
     public class User
     {

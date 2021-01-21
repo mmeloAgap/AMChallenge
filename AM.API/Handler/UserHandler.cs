@@ -1,4 +1,4 @@
-﻿using AM.Core.Model;
+﻿using AM.API.Models;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
@@ -22,10 +22,12 @@ namespace AM.API.Handler
     public class UserHandler : IUserHandler
     {
         private IEnumerable<User> _users;
+        private IOptions<Settings> _settings;
 
-        public UserHandler(IOptions<UserData> userData)
-        {    
-            _users = userData.Value.Users;
+        public UserHandler(IOptions<Settings> settings)
+        {
+            _settings = settings ?? throw new ArgumentNullException(nameof(settings));
+            _users = settings.Value.Users;
         }
 
         public AuthenticateResponse Authenticate(UserRequest model)
@@ -58,10 +60,10 @@ namespace AM.API.Handler
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes("this phrase is big enough to be a secret");
+            var key = Encoding.ASCII.GetBytes(_settings.Value.TokenSecret);
             var tokenDescriptor = new SecurityTokenDescriptor
             {
-                Subject = new ClaimsIdentity(new[] { new Claim("id", user.UserId.ToString()) , new Claim("username", user.Username.ToString())}),
+                Subject = new ClaimsIdentity(new[] { new Claim("id", user.UserId.ToString()) }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };

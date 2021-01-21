@@ -1,4 +1,4 @@
-﻿using AM.Core.Model;
+﻿using AM.API.Models;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AM.Core.Manager
+namespace AM.API.Manager
 {
     public class UserManager : IUserManager
     {
@@ -22,7 +22,7 @@ namespace AM.Core.Manager
 
         }
 
-        public async Task<List<string>> GetUserAnimals(int userId)
+        public List<string> GetUserAnimals(int userId)
         {
             var users = _settings.Users;
             var animals =  users.Where(x => x.UserId == userId).FirstOrDefault().Animals;
