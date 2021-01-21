@@ -53,9 +53,13 @@ namespace AM.API.Controllers
         {
             singleCallRequest.RequestId = Guid.NewGuid();
 
-            var result = await _questionManager.SingleCall(singleCallRequest);
+            var botResult = await _questionManager.SingleCall(singleCallRequest);
 
-            _logger.LogInformation(JsonConvert.SerializeObject(new LogResponse() { RequestId = singleCallRequest.RequestId, Result = result, UserWord = singleCallRequest.Word, TimeStamp = DateTime.UtcNow }));
+            _logger.LogInformation(JsonConvert.SerializeObject(new LogResponse() { RequestId = singleCallRequest.RequestId, Result = botResult, UserWord = singleCallRequest.Word, TimeStamp = DateTime.UtcNow }));
+
+            var result = JsonConvert.DeserializeObject<Result>(botResult);
+
+            result.RequestId = singleCallRequest.RequestId.ToString();
 
             return Ok(result);
         }
@@ -79,9 +83,14 @@ namespace AM.API.Controllers
                 return Unauthorized();
             }
 
-            var result = await _questionManager.HandleQuestion(questionRequest, user.UserId);
+            var botResult = await _questionManager.HandleQuestion(questionRequest, user.UserId);
 
-            _logger.LogInformation(JsonConvert.SerializeObject(new LogResponse() { RequestId = questionRequest.RequestId, Result = result, UserWord = questionRequest.Word, TimeStamp = DateTime.UtcNow}));
+            _logger.LogInformation(JsonConvert.SerializeObject(new LogResponse() { RequestId = questionRequest.RequestId, Result = botResult, UserWord = questionRequest.Word, TimeStamp = DateTime.UtcNow}));
+
+
+            var result = JsonConvert.DeserializeObject<Result>(botResult);
+
+            result.RequestId = questionRequest.RequestId.ToString();
 
             return Ok(result);
         }
